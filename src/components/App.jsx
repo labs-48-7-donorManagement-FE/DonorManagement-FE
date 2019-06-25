@@ -7,7 +7,6 @@ import Signup from './signupComponent.jsx';
 import Login from './loginComponent.jsx';
 import HomePage from './HomePage.jsx';
 import NotFound from './NotFound.jsx';
-import Dashboard from './dashboard.jsx';
 
 class App extends Component {
   state = {};
@@ -19,7 +18,6 @@ class App extends Component {
           <Route path="/" component={HomePage} exact />
           <Route path="/signup" component={Signup} />
           <Route path="/login" component={Login} />
-          <Route path="/dashboard" component={Dashboard} />
           <Route path="/*" component={NotFound} />
         </Router>
       </Provider>
