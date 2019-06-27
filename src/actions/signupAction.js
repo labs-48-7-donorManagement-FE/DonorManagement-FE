@@ -11,7 +11,7 @@ const fetchSignup = (user, history) => (dispatch) => {
     .post('https://donor-manage.herokuapp.com/api/v1/auth/signup', user)
     .then((res) => {
       localStorage.setItem('jwtAuth', res.data.token);
-      history.push('/');
+      history.push('/dashboard');
       dispatch(getCurrentUser(res.data));
       dispatch({
         type: SIGNUP_SUCCESS,
