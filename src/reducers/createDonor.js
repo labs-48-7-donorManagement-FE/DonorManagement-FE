@@ -1,19 +1,19 @@
-import { GET_CARD, CARD_ERROR } from '../actions/types';
+import { CREATE_DONOR, CREATE_DONOR_ERROR } from '../actions/types';
 
 const initialState = {
+  body: {},
   isAuthenticated: !!localStorage.getItem('jwtAuth'),
   error: {},
-  cards: [],
 };
 
 export default function (state = initialState, action) {
   switch (action.type) {
-    case GET_CARD:
+    case CREATE_DONOR:
       return {
         ...state,
-        cards: action.payload,
+        body: action.payload,
       };
-    case CARD_ERROR:
+    case CREATE_DONOR_ERROR:
       return {
         ...state,
         error: action.payload,
