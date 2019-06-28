@@ -160,7 +160,7 @@ class Dashboard extends Component {
             </div>
           </div>
           <div className="second-dashboard-section">
-            <h1>Donors</h1>
+            <h1>Meet Our Donors</h1>
             <div className="card-head">
               {cards.map(card => (
                 <Card
