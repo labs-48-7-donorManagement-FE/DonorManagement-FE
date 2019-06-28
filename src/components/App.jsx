@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from '../store';
 import Signup from './signupComponent.jsx';
@@ -16,11 +16,13 @@ class App extends Component {
     return (
       <Provider store={store}>
         <Router>
+          <Switch>
           <Route path="/" component={HomePage} exact />
           <Route path="/signup" component={Signup} />
           <Route path="/login" component={Login} />
           <Route path="/dashboard" component={Dashboard} />
-          <Route path="/*" component={NotFound} />
+          <Route component={NotFound} />
+          </Switch>
         </Router>
       </Provider>
     );

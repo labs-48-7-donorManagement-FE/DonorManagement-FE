@@ -11,7 +11,7 @@ const fetchLogin = (user, history) => (dispatch) => {
     .post('https://donor-manage.herokuapp.com/api/v1/auth/login', user)
     .then((res) => {
       localStorage.setItem('jwtAuth', res.data.token);
-      history.push('/');
+      history.push('/dashboard');
       dispatch(getCurrentUser(res.data));
       dispatch({
         type: LOGIN_SUCCESS,
