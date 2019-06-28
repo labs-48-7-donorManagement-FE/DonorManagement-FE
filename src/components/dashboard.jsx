@@ -3,26 +3,36 @@ import React, { Component, Fragment } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import Proptype from 'prop-types';
 import { connect } from 'react-redux';
+import * as yup from 'yup';
 import '../css/style.css';
 import Header from './HeaderComponent.jsx';
 import Icon from '../img/dashboard.svg';
 import getCardDetails from '../actions/cardAction';
-// import Profile from '../img/profile.jpg';
+import donor from '../actions/createDonor';
 import Card from './card.jsx';
 import InputField from './InputField.jsx';
+
+const schema = yup.object().shape({
+  firstName: yup.string().required(),
+  lastName: yup.string().required(),
+  email: yup
+    .string()
+    .email()
+    .required(),
+  phoneNo: yup.number().required().min(11),
+});
 
 class Dashboard extends Component {
   state = {
     firstName: '',
     lastName: '',
     email: '',
-    phone: '',
+    phoneNo: '',
     errors: {},
     focus: false,
   };
 
   componentDidMount() {
-    console.log('componentdidmount');
     this.props.getCardDetails();
   }
 
@@ -30,13 +40,61 @@ class Dashboard extends Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
+  checkValidation = async () => {
+    let formIsValid = false;
+
+    try {
+      await schema.validate(this.state, { abortEarly: false });
+      formIsValid = true;
+    } catch (err) {
+      const errors = err.inner.reduce((accumulator, error) => {
+        accumulator[error.path] = error.message;
+        return accumulator;
+      }, {});
+      formIsValid = false;
+      this.setState({ errors: { ...errors } });
+    }
+    return formIsValid;
+  };
+
+  clearFocus = (name) => {
+    const previousErrors = { ...this.state.errors };
+    delete previousErrors[name];
+    this.setState({ errors: previousErrors });
+  };
+
+  onSubmit = async (event) => {
+    event.preventDefault();
+
+    const validationError = await this.checkValidation();
+
+    const {
+      firstName, lastName, email, phoneNo,
+    } = this.state;
+
+    const obj = {
+      firstName,
+      lastName,
+      email,
+      phoneNo,
+      methodOfComms: 'skype',
+      pastDonations: 'Nigeria donations',
+    };
+
+    if (validationError) {
+      this.props.donor(obj, this.props.history);
+    }
+  };
+
   render() {
+    const { cards } = this.props;
+
     return (
       <Fragment>
         <div className="general-container">
           <Header>
             <div className="header-link">
-              <Link to="/login">logout</Link>
+              <Link to="/">logout</Link>
             </div>
           </Header>
           <div className="first-dashboard-section">
@@ -46,6 +104,7 @@ class Dashboard extends Component {
             <div className="dashboard-form-section">
               <div className="dashboard-form">
                 <form action="" className="dash-form" onSubmit={this.onSubmit}>
+                  <div className="server-success-message">{this.props.createDonor.message}</div>
                   <h2>Create A Donor</h2>
                   <InputField
                     onFocus={e => this.clearFocus(e.target.name)}
@@ -89,10 +148,10 @@ class Dashboard extends Component {
                     labelName="Phone number"
                     className="form-control"
                     placeholder="Enter phone number"
-                    name="phone"
-                    value={this.state.phone}
+                    name="phoneNo"
+                    value={this.state.phoneNo}
                     onChange={this.onChange}
-                    error={this.state.errors.email && this.state.errors.email}
+                    error={this.state.errors.phoneNo && this.state.errors.phoneNo}
                   />
 
                   <InputField type="submit" className="form-button" value="create" />
@@ -103,11 +162,18 @@ class Dashboard extends Component {
           <div className="second-dashboard-section">
             <h1>Donors</h1>
             <div className="card-head">
-              <Card firstName="simi" lastName="joe" phoneNo="07080195678" email="simi@gmail.com" />
-              <Card firstName="simi" lastName="joe" phoneNo="07080195678" email="simi@gmail.com" />
-              <Card firstName="simi" lastName="joe" phoneNo="07080195678" email="simi@gmail.com" />
-              <Card firstName="simi" lastName="joe" phoneNo="07080195678" email="simi@gmail.com" />
-              <Card firstName="simi" lastName="joe" phoneNo="07080195678" email="simi@gmail.com" />
+              {cards.map(card => (
+                <Card
+                  key={card.id}
+                  firstName={card.firstName}
+                  lastName={card.lastName}
+                  phoneNo={card.phoneNo}
+                  email={card.email}
+                  methodOfComms={card.methodOfComms}
+                  pastDonations={card.pastDonations}
+                  lastCommsDate={card.lastCommsDate}
+                />
+              ))}
             </div>
           </div>
         </div>
@@ -118,13 +184,20 @@ class Dashboard extends Component {
 
 Dashboard.propTypes = {
   getCardDetails: Proptype.func.isRequired,
+  card: Proptype.array,
+  map: Proptype.func,
+  donor: Proptype.object,
+  history: Proptype.object,
+  cards: Proptype.object,
+  createDonor: Proptype.object,
 };
 
 const mapStateToProps = state => ({
-  card: state.card.body,
+  cards: state.card.cards,
+  createDonor: state.createDonor.body,
 });
 
 export default connect(
   mapStateToProps,
-  { getCardDetails },
+  { getCardDetails, donor },
 )(withRouter(Dashboard));

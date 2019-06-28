@@ -1,14 +1,14 @@
 import axios from 'axios';
 import { GET_CARD, CARD_ERROR } from './types';
 
-const getCardDetails = () => (dispatch) => {
-  axios
+const getCardDetails = () => async (dispatch) => {
+  await axios
     .get('https://donor-manage.herokuapp.com/api/v1/donors')
     .then((res) => {
-      console.log('called', res);
+      console.log('called', res.data.data);
       dispatch({
         type: GET_CARD,
-        payload: res.data,
+        payload: res.data.data,
       });
     })
     .catch((err) => {

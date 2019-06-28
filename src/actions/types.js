@@ -6,3 +6,5 @@ export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_ERROR = 'LOGIN_ERROR';
 export const GET_CARD = 'GET_CARD';
 export const CARD_ERROR = 'CARD_ERROR';
+export const CREATE_DONOR = 'CREATE_DONOR';
+export const CREATE_DONOR_ERROR = 'CREATE_DONOR_ERROR';
