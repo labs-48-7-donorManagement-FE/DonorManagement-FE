@@ -83,6 +83,7 @@ class Login extends Component {
   };
 
   render() {
+    localStorage.clear();
     return (
       <Fragment>
         <div className="container">
