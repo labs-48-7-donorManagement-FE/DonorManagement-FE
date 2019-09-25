@@ -6,7 +6,8 @@ const getCurrentUser = user => ({
   payload: user,
 });
 
-const fetchSignup = (user, history) => (dispatch) => {
+const fetchSignup = (user, history, resetIsLoadingState) => (dispatch) => {
+  resetIsLoadingState();
   axios
     .post('https://donor-manage.herokuapp.com/api/v1/auth/signup', user)
     .then((res) => {
@@ -17,11 +18,15 @@ const fetchSignup = (user, history) => (dispatch) => {
         type: SIGNUP_SUCCESS,
         payload: res.data,
       });
+      resetIsLoadingState();
     })
-    .catch(err => dispatch({
-      type: SIGNUP_ERROR,
-      payload: err.response.data,
-    }));
+    .catch((err) => {
+      dispatch({
+        type: SIGNUP_ERROR,
+        payload: err.response.data,
+      });
+      resetIsLoadingState();
+    });
 };
 
 export default fetchSignup;

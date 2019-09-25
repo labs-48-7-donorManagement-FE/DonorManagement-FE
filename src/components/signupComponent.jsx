@@ -34,6 +34,7 @@ class Signup extends Component {
     password: '',
     errors: {},
     focus: false,
+    isLoading: false,
   };
 
   onChange = (event) => {
@@ -80,9 +81,13 @@ class Signup extends Component {
     const validationError = await this.checkValidation();
 
     if (validationError) {
-      this.props.fetchSignup(obj, this.props.history);
+      this.props.fetchSignup(obj, this.props.history, this.resetIsLoadingState);
     }
   };
+
+  resetIsLoadingState = () => {
+    this.setState(prevState => ({ isLoading: !prevState.isLoading }));
+  }
 
   render() {
     localStorage.clear();
@@ -155,7 +160,7 @@ class Signup extends Component {
                     error={this.state.errors.password && this.state.errors.password}
                   />
 
-                  <InputField type="submit" className="form-button" value="sign up" />
+                  <InputField type="submit" className="form-button" value={this.state.isLoading === true ? 'Loading...' : 'sign up' } />
                 </form>
               </div>
             </div>
