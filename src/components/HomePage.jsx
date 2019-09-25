@@ -7,6 +7,7 @@ import Header from './HeaderComponent.jsx';
 
 class HomePage extends Component {
   render() {
+    localStorage.clear();
     return (
       <Fragment>
         <Header>

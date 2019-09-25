@@ -85,6 +85,7 @@ class Signup extends Component {
   };
 
   render() {
+    localStorage.clear();
     return (
       <Fragment>
         <div className="container">

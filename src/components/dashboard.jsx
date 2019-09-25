@@ -40,6 +40,10 @@ class Dashboard extends Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
+  logout = () => {
+    localStorage.clear();
+  };
+
   checkValidation = async () => {
     let formIsValid = false;
 
@@ -87,14 +91,18 @@ class Dashboard extends Component {
   };
 
   render() {
-    const { cards } = this.props;
+    const { cards, history } = this.props;
+
+    if (!localStorage.getItem('jwtAuth')) {
+      history.push('/');
+    }
 
     return (
       <Fragment>
         <div className="general-container">
           <Header>
             <div className="header-link">
-              <Link to="/">logout</Link>
+              <Link to="/" onClick={this.logout}>logout</Link>
             </div>
           </Header>
           <div className="first-dashboard-section">
